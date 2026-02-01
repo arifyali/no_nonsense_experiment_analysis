@@ -13,7 +13,11 @@ This package provides data scientists and analysts with a streamlined toolkit fo
 ## Features
 
 - **Data Preparation**: Comprehensive data validation, cleaning, and preprocessing
-- **Experimental Methods**: Standardized interface for statistical analysis methods
+- **Experimental Methods**: Standardized interface for statistical analysis methods including:
+  - **A/B Testing**: Two-group comparison with effect size calculation
+  - **ANOVA**: Multi-group analysis with post-hoc testing
+  - **Chi-Square Tests**: Independence and goodness-of-fit testing for categorical data
+  - **Regression Analysis**: Linear and logistic regression with comprehensive statistics
 - **Shared Utilities**: Common statistical functions, visualization tools, and data transformers
 - **Workflow Management**: Structured pipeline from data loading to LLM-ready reporting
 - **Property-Based Testing**: Rigorous correctness validation using Hypothesis
@@ -43,23 +47,43 @@ pip install -e ".[dev]"
 ```python
 import pandas as pd
 from no_nonsense_experiment_analysis import WorkflowManager
+from no_nonsense_experiment_analysis.methods import ABTest, default_registry
 
 # Load your experimental data
 data = pd.read_csv("your_experiment_data.csv")
 
-# Create workflow manager
-workflow = WorkflowManager(data)
+# Option 1: Use individual methods directly
+ab_test = ABTest(alpha=0.05)
+result = ab_test.execute(data, group_col="treatment_group", metric_col="conversion_rate")
 
-# Execute analysis pipeline
+print(f"P-value: {result.p_values['two_sample_ttest']:.4f}")
+print(f"Effect size: {result.effect_sizes['cohens_d']:.3f}")
+print(f"Significant: {result.metadata['significant']}")
+
+# Option 2: Use the method registry
+method = default_registry.get_method('ab_test', alpha=0.05)
+result = method.execute(data, group_col="treatment_group", metric_col="conversion_rate")
+
+# Option 3: Use workflow manager (coming soon)
+workflow = WorkflowManager(data)
 report = (workflow
     .prep(strategy="drop_missing")
-    .analyze("t_test", groups=["control", "treatment"])
+    .analyze("ab_test", group_col="treatment_group", metric_col="conversion_rate")
     .report())
 
 # Generate LLM-ready narrative prompt
 narrative_prompt = report.to_llm_prompt()
 print(narrative_prompt)
 ```
+
+### Available Methods
+
+- **`ab_test`**: A/B testing for two-group comparisons
+- **`one_way_anova`**: One-way ANOVA for multi-group comparisons  
+- **`chi_square_independence`**: Chi-square test of independence
+- **`chi_square_goodness_of_fit`**: Chi-square goodness of fit test
+- **`linear_regression`**: Linear regression analysis
+- **`logistic_regression`**: Logistic regression for binary outcomes
 
 ## Development
 
@@ -89,6 +113,7 @@ no_nonsense_experiment_analysis/
 - numpy >= 1.21.0
 - matplotlib >= 3.5.0
 - scipy >= 1.9.0
+- scikit-learn >= 1.1.0
 
 ## License
 
