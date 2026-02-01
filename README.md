@@ -85,6 +85,21 @@ print(narrative_prompt)
 - **`linear_regression`**: Linear regression analysis
 - **`logistic_regression`**: Logistic regression for binary outcomes
 
+For detailed documentation of each method, including when to use them, implementation details, and examples, see [METHODS.md](docs/METHODS.md).
+
+**Theoretical Background**: For comprehensive explanations of experimental design principles and methodologies, refer to the [Experimentation Primer](https://github.com/mustafaysir/no_nonsense_experimental_design/blob/main/Experimentation%20Primer.md) in the companion repository.
+
+## Method Selection Quick Reference
+
+| Data Type | Number of Groups | Method | Use Case |
+|-----------|------------------|--------|----------|
+| Continuous | 2 groups | `ab_test` | A/B testing, treatment vs control |
+| Continuous | 3+ groups | `one_way_anova` | Multi-arm experiments |
+| Continuous | Multiple predictors | `linear_regression` | Modeling relationships, controlling confounders |
+| Categorical | 2+ groups | `chi_square_independence` | Testing associations |
+| Categorical | Distribution test | `chi_square_goodness_of_fit` | Validating expected distributions |
+| Binary | Multiple predictors | `logistic_regression` | Predicting binary outcomes |
+
 ## Development
 
 This package is under active development. The current implementation provides the core structure and interfaces. Individual components will be implemented incrementally.

@@ -2,11 +2,16 @@
 no_nonsense_experiment_analysis
 
 A Python companion library for experimental data analysis, designed to work 
-alongside the no_nonsense_experimental_design repository.
+alongside The No-Nonsense Guide to Experimental Design.
 
 This package provides data scientists and analysts with a streamlined toolkit 
-for experimental data analysis, following a clear workflow from data preparation 
-through analysis to reporting.
+for experimental data analysis, implementing the practical methodologies outlined 
+in the companion experimental design guide. The package follows a clear workflow 
+from data preparation through analysis to reporting.
+
+For detailed method documentation, see docs/METHODS.md
+For theoretical background, see: 
+https://github.com/mustafaysir/no_nonsense_experimental_design
 """
 
 __version__ = "0.1.0"
