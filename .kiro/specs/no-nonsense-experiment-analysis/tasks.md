@@ -17,22 +17,22 @@ This implementation plan converts the feature design into a series of discrete c
   - **Property 1: Package organization**
   - **Validates: Requirements 8.1, 8.2**
 
-- [ ] 2. Implement data validation core
-  - [ ] 2.1 Create DataValidator class with DataFrame validation methods
+- [x] 2. Implement data validation core
+  - [x] 2.1 Create DataValidator class with DataFrame validation methods
     - Implement validate_dataframe() with structure and content checks
     - Implement check_required_columns() and validate_data_types() methods
     - Add comprehensive error messaging for validation failures
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-  - [ ]* 2.2 Write property test for input type validation
+  - [x]* 2.2 Write property test for input type validation
     - **Property 1: Input type validation**
     - **Validates: Requirements 1.4**
 
-  - [ ]* 2.3 Write property test for validation completeness
+  - [x]* 2.3 Write property test for validation completeness
     - **Property 2: Validation completeness**
     - **Validates: Requirements 1.1, 1.3**
 
-  - [ ] 2.4 Write property test for error message descriptiveness
+  - [x] 2.4 Write property test for error message descriptiveness
     - **Property 3: Error message descriptiveness**
     - **Validates: Requirements 1.2, 7.1**
 
