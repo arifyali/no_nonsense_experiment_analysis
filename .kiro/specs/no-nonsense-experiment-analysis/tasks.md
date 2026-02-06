@@ -64,28 +64,28 @@ This implementation plan converts the feature design into a series of discrete c
 - [x] 4. Checkpoint - Ensure data preparation tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 5. Implement experimental methods framework
-  - [ ] 5.1 Create ExperimentalMethod abstract base class and MethodRegistry
+- [x] 5. Implement experimental methods framework
+  - [x] 5.1 Create ExperimentalMethod abstract base class and MethodRegistry
     - Define ExperimentalMethod interface with validate_inputs(), execute(), get_parameters()
     - Implement MethodRegistry for method registration and discovery
     - Create MethodResult dataclass with standardized result format
     - _Requirements: 3.1, 3.2, 3.3, 3.6_
 
-  - [ ] 5.2 Implement method chaining and workflow support
+  - [x] 5.2 Implement method chaining and workflow support
     - Add method compatibility checking for chaining
     - Implement parameter validation with clear error messages
     - Add support for method result aggregation
     - _Requirements: 3.4, 3.5_
 
-  - [ ] 5.3 Write property test for method result standardization
+  - [x] 5.3 Write property test for method result standardization
     - **Property 7: Method result standardization**
     - **Validates: Requirements 3.3, 3.6**
 
-  - [ ]* 5.4 Write property test for method chaining compatibility
+  - [x]* 5.4 Write property test for method chaining compatibility
     - **Property 8: Method chaining compatibility**
     - **Validates: Requirements 3.5**
 
-  - [ ] 5.5 Write property test for parameter validation consistency
+  - [x] 5.5 Write property test for parameter validation consistency
     - **Property 9: Parameter validation consistency**
     - **Validates: Requirements 3.4, 7.3**
 

@@ -15,7 +15,12 @@ from ..core.models import MethodResult
 
 class OneWayANOVA(ExperimentalMethod):
     """One-way ANOVA for comparing multiple experimental groups."""
-    
+
+    # Class-level attributes
+    method_name = "One-Way ANOVA"
+    method_description = "Compare multiple groups using analysis of variance"
+    required_params = ['group_col', 'metric_col']
+
     def __init__(self, alpha: float = 0.05, post_hoc: bool = True):
         """Initialize ANOVA parameters.
         
@@ -135,7 +140,7 @@ class OneWayANOVA(ExperimentalMethod):
             },
             metadata={
                 'groups': group_names,
-                'significant': p_value < self.alpha,
+                'significant': bool(p_value < self.alpha),
                 'interpretation': self._interpret_results(p_value, eta_squared, len(groups))
             }
         )
@@ -174,7 +179,7 @@ class OneWayANOVA(ExperimentalMethod):
                     't_statistic': t_stat,
                     'p_value': p_val,
                     'p_value_bonferroni': p_val_corrected,
-                    'significant': p_val_corrected < self.alpha
+                    'significant': bool(p_val_corrected < self.alpha)
                 }
         
         return pairwise_results

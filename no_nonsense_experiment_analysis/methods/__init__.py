@@ -6,7 +6,7 @@ and standardized result handling, along with implementations of common
 experimental design methods.
 """
 
-from .base import ExperimentalMethod
+from .base import ExperimentalMethod, MethodChain
 from .registry import MethodRegistry, default_registry
 from .result import MethodResult
 from .ab_test import ABTest
@@ -16,11 +16,12 @@ from .regression import LinearRegressionAnalysis, LogisticRegressionAnalysis
 
 __all__ = [
     "ExperimentalMethod",
-    "MethodRegistry", 
+    "MethodChain",
+    "MethodRegistry",
     "default_registry",
     "MethodResult",
     "ABTest",
-    "OneWayANOVA", 
+    "OneWayANOVA",
     "ChiSquareTest",
     "LinearRegressionAnalysis",
     "LogisticRegressionAnalysis"

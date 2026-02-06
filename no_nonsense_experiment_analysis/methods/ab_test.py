@@ -15,7 +15,12 @@ from ..core.models import MethodResult
 
 class ABTest(ExperimentalMethod):
     """A/B testing method for comparing two experimental groups."""
-    
+
+    # Class-level attributes
+    method_name = "A/B Test"
+    method_description = "Compare two experimental groups using a two-sample t-test"
+    required_params = ['group_col', 'metric_col']
+
     def __init__(self, alpha: float = 0.05, alternative: str = 'two-sided'):
         """Initialize A/B test parameters.
         
@@ -128,7 +133,7 @@ class ABTest(ExperimentalMethod):
             },
             metadata={
                 'groups': list(groups),
-                'significant': p_value < self.alpha,
+                'significant': bool(p_value < self.alpha),
                 'interpretation': self._interpret_results(p_value, cohens_d)
             }
         )

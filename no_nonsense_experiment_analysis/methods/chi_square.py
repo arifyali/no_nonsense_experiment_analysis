@@ -15,7 +15,13 @@ from ..core.models import MethodResult
 
 class ChiSquareTest(ExperimentalMethod):
     """Chi-square test for independence and goodness of fit."""
-    
+
+    # Class-level attributes
+    method_name = "Chi-Square Test"
+    method_description = "Analyze categorical data using chi-square test"
+    # Note: required_params depends on test_type, handled in __init__
+    required_params = ['group_col', 'outcome_col']  # Default for independence test
+
     def __init__(self, alpha: float = 0.05, test_type: str = 'independence'):
         """Initialize chi-square test parameters.
         
@@ -122,9 +128,9 @@ class ChiSquareTest(ExperimentalMethod):
                 'cramers_v': cramers_v
             },
             metadata={
-                'significant': p_value < self.alpha,
+                'significant': bool(p_value < self.alpha),
                 'interpretation': self._interpret_independence_results(p_value, cramers_v, contingency_table.shape),
-                'assumptions_met': self._check_assumptions(expected)
+                'assumptions_met': bool(self._check_assumptions(expected))
             }
         )
     
@@ -173,9 +179,9 @@ class ChiSquareTest(ExperimentalMethod):
                 'cramers_v': cramers_v
             },
             metadata={
-                'significant': p_value < self.alpha,
+                'significant': bool(p_value < self.alpha),
                 'interpretation': self._interpret_goodness_of_fit_results(p_value, cramers_v),
-                'assumptions_met': all(f >= 5 for f in expected_freq)
+                'assumptions_met': bool(all(f >= 5 for f in expected_freq))
             }
         )
     

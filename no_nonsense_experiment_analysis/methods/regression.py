@@ -17,7 +17,12 @@ from ..core.models import MethodResult
 
 class LinearRegressionAnalysis(ExperimentalMethod):
     """Linear regression analysis for continuous outcomes."""
-    
+
+    # Class-level attributes
+    method_name = "Linear Regression"
+    method_description = "Analyze continuous outcomes using linear regression"
+    required_params = ['target_col', 'feature_cols']
+
     def __init__(self, alpha: float = 0.05, include_intercept: bool = True):
         """Initialize linear regression parameters.
         
@@ -232,7 +237,12 @@ class LinearRegressionAnalysis(ExperimentalMethod):
 
 class LogisticRegressionAnalysis(ExperimentalMethod):
     """Logistic regression analysis for binary outcomes."""
-    
+
+    # Class-level attributes
+    method_name = "Logistic Regression"
+    method_description = "Analyze binary outcomes using logistic regression"
+    required_params = ['target_col', 'feature_cols']
+
     def __init__(self, alpha: float = 0.05, max_iter: int = 1000):
         """Initialize logistic regression parameters.
         
