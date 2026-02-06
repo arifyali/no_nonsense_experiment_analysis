@@ -89,24 +89,24 @@ This implementation plan converts the feature design into a series of discrete c
     - **Property 9: Parameter validation consistency**
     - **Validates: Requirements 3.4, 7.3**
 
-- [ ] 6. Implement utilities module
-  - [ ] 6.1 Create StatisticalFunctions class with common statistical operations
+- [x] 6. Implement utilities module
+  - [x] 6.1 Create StatisticalFunctions class with common statistical operations
     - Implement calculate_effect_size(), bootstrap_confidence_interval()
     - Implement multiple_comparison_correction() with various methods
     - Ensure mathematical correctness and consistent interfaces
     - _Requirements: 4.1, 4.5, 4.6_
 
-  - [ ] 6.2 Create VisualizationTools and DataTransformers classes
+  - [x] 6.2 Create VisualizationTools and DataTransformers classes
     - Implement plotting functions for distributions and comparisons
     - Implement data transformation utilities (pivot, aggregate, summarize)
     - Add helper functions for data validation and type checking
     - _Requirements: 4.2, 4.3, 4.4_
 
-  - [ ]* 6.3 Write property test for mathematical operation correctness
+  - [x]* 6.3 Write property test for mathematical operation correctness
     - **Property 10: Mathematical operation correctness**
     - **Validates: Requirements 4.5**
 
-  - [ ] 6.4 Write property test for interface consistency
+  - [x] 6.4 Write property test for interface consistency
     - **Property 11: Interface consistency**
     - **Validates: Requirements 4.6**
 
