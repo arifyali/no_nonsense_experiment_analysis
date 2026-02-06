@@ -32,8 +32,18 @@ The package follows a modular three-component architecture:
 
 ## Installation
 
+Install directly from GitHub:
+
 ```bash
-pip install no_nonsense_experiment_analysis
+pip install git+https://github.com/arifyali/no_nonsense_experiment_analysis.git
+```
+
+Or clone and install locally:
+
+```bash
+git clone https://github.com/arifyali/no_nonsense_experiment_analysis.git
+cd no_nonsense_experiment_analysis
+pip install .
 ```
 
 For development:
