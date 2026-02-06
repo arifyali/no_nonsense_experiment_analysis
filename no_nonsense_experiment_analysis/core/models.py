@@ -109,9 +109,67 @@ class AnalysisReport:
         report_dict = convert_to_dict(self)
         return json.dumps(report_dict, indent=2, default=str)
     
+    @classmethod
+    def from_json(cls, json_str: str) -> 'AnalysisReport':
+        """Deserialize a report from JSON format.
+
+        Args:
+            json_str: JSON string representation of the report
+
+        Returns:
+            AnalysisReport instance
+        """
+        data = json.loads(json_str)
+
+        # Reconstruct MethodResult objects
+        results = []
+        for r in data.get('results', []):
+            # Convert confidence_intervals back to tuples
+            ci = {k: tuple(v) if isinstance(v, list) else v
+                  for k, v in r.get('confidence_intervals', {}).items()}
+            results.append(MethodResult(
+                method_name=r.get('method_name', ''),
+                parameters=r.get('parameters', {}),
+                statistics=r.get('statistics', {}),
+                p_values=r.get('p_values', {}),
+                confidence_intervals=ci,
+                effect_sizes=r.get('effect_sizes', {}),
+                metadata=r.get('metadata', {})
+            ))
+
+        return cls(
+            dataset_summary=data.get('dataset_summary', {}),
+            preprocessing_steps=data.get('preprocessing_steps', []),
+            methods_applied=data.get('methods_applied', []),
+            results=results,
+            overall_conclusions=data.get('overall_conclusions', {}),
+            metadata=data.get('metadata', {})
+        )
+
+    def get_significant_results(self, alpha: float = 0.05) -> List[Dict[str, Any]]:
+        """Get results with statistically significant p-values.
+
+        Args:
+            alpha: Significance threshold (default: 0.05)
+
+        Returns:
+            List of significant findings with method, test, p-value, and effect sizes
+        """
+        significant = []
+        for result in self.results:
+            for test_name, p_val in result.p_values.items():
+                if p_val < alpha:
+                    significant.append({
+                        'method': result.method_name,
+                        'test': test_name,
+                        'p_value': p_val,
+                        'effect_sizes': result.effect_sizes
+                    })
+        return significant
+
     def to_llm_prompt(self) -> str:
         """Generate an LLM-ready prompt from the analysis report.
-        
+
         Returns:
             Formatted string suitable for LLM narrative generation
         """
@@ -119,44 +177,63 @@ class AnalysisReport:
             "# Experimental Analysis Report",
             "",
             "## Dataset Summary",
-            f"- Shape: {self.dataset_summary.get('shape', 'Unknown')}",
-            f"- Columns: {self.dataset_summary.get('columns', [])}",
-            f"- Data types: {self.dataset_summary.get('dtypes', {})}",
-            "",
-            "## Preprocessing Steps",
         ]
-        
-        for step in self.preprocessing_steps:
-            prompt_parts.append(f"- {step}")
-        
-        prompt_parts.extend([
-            "",
-            "## Analysis Methods Applied",
-        ])
-        
+
+        # Handle both old and new format
+        if 'original_shape' in self.dataset_summary:
+            prompt_parts.append(f"- Original shape: {self.dataset_summary.get('original_shape')}")
+            prompt_parts.append(f"- Final shape: {self.dataset_summary.get('current_shape')}")
+            if self.dataset_summary.get('rows_removed', 0) > 0:
+                prompt_parts.append(f"- Rows removed during preprocessing: {self.dataset_summary.get('rows_removed')}")
+        else:
+            prompt_parts.append(f"- Shape: {self.dataset_summary.get('shape', 'Unknown')}")
+
+        prompt_parts.append(f"- Columns: {self.dataset_summary.get('columns', [])}")
+        prompt_parts.append(f"- Data types: {self.dataset_summary.get('dtypes', {})}")
+
+        prompt_parts.extend(["", "## Preprocessing Steps"])
+        if self.preprocessing_steps:
+            for step in self.preprocessing_steps:
+                prompt_parts.append(f"- {step}")
+        else:
+            prompt_parts.append("- No preprocessing applied")
+
+        prompt_parts.extend(["", "## Analysis Methods Applied"])
         for method in self.methods_applied:
             prompt_parts.append(f"- {method}")
-        
-        prompt_parts.extend([
-            "",
-            "## Results Summary",
-        ])
-        
+
+        prompt_parts.extend(["", "## Results Summary"])
         for result in self.results:
+            # Determine significance
+            sig_tests = [t for t, p in result.p_values.items() if p < 0.05]
+            sig_marker = " **(SIGNIFICANT)**" if sig_tests else ""
+
             prompt_parts.extend([
-                f"### {result.method_name}",
+                f"### {result.method_name}{sig_marker}",
                 f"- Parameters: {result.parameters}",
                 f"- Key statistics: {result.statistics}",
                 f"- P-values: {result.p_values}",
                 f"- Effect sizes: {result.effect_sizes}",
                 ""
             ])
-        
+
+        # Add significant findings summary
+        significant = self.get_significant_results()
+        if significant:
+            prompt_parts.extend(["## Significant Findings"])
+            for finding in significant:
+                prompt_parts.append(
+                    f"- {finding['method']}: {finding['test']} (p={finding['p_value']:.4f})"
+                )
+            prompt_parts.append("")
+
         prompt_parts.extend([
             "## Overall Conclusions",
-            str(self.overall_conclusions),
+            f"- Workflow completed: {self.overall_conclusions.get('workflow_completed', 'Unknown')}",
+            f"- Analyses performed: {self.overall_conclusions.get('analyses_performed', len(self.results))}",
+            f"- Significant findings: {self.overall_conclusions.get('significant_findings', len(significant))}",
             "",
             "Please generate a narrative summary of this experimental analysis."
         ])
-        
+
         return "\n".join(prompt_parts)
