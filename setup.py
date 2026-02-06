@@ -18,7 +18,7 @@ setup(
     description="A Python companion library for experimental data analysis",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/example/no_nonsense_experiment_analysis",
+    url="https://github.com/arifyali/no_nonsense_experiment_analysis",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
